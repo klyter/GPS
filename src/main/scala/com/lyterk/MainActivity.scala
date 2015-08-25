@@ -1,7 +1,17 @@
 package com.lyterk
 
 import android.os.Bundle
+import android.widget.{LinearLayout, Button, TextView, ToggleButton}
+import macroid._
+import macroid.FullDsl._
+import macroid.Ui._
 
+
+class MainActivity extends Activity with Contexts[Activity] {
+
+  var greeting = slot[TextView]
+
+<<<<<<< HEAD
 import android.view.View
 import android.app.Activity
 import android.util.Log
@@ -55,6 +65,28 @@ class MainActivity extends Activity
         .addOnConnectionFailedListener(this)
         .addApi(LocationServices.API)
         .build();
+=======
+  override def onCreate(savedInstanceState: Bundle) {
+    super.onCreate(savedInstanceState)    
+
+    setContentView {
+
+      getUi {
+        var greeting = slot[TextView]
+
+        l[LinearLayout] (     
+          w[Button] <~
+            text("Click me") <~
+            On.click {
+              greeting <~ show
+            },
+          w[TextView] <~
+            wire(greeting) <~
+            MyTweaks.greeting("Button successfully clicked.")
+        ) <~ vertical
+
+      }
+>>>>>>> 58f8f97fe17e08011d2cd9b9949fdfcdaa83f0ad
     }
   }
 }
