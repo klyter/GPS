@@ -64,7 +64,7 @@ class MainActivity extends Activity
     }
   }
 
-override def onConnectionFailed(conRes: ConnectionResult) = {
+  override def onConnectionFailed(conRes: ConnectionResult) = {
     // super.onConnectionFailed(conRes)
     Log.v(TAG, "onConnectionFailed")
   }
@@ -72,5 +72,15 @@ override def onConnectionFailed(conRes: ConnectionResult) = {
   override def onConnectionSuspended(x: Int): Unit = {
     // super.onConnectionSuspended(x)
     Log.v(TAG, "onConnectionSuspended")
+  }
+
+  protected def buildGoogleApiClient() {    
+    this.synchronized {
+      mGoogleApiClient = new GoogleApiClient.Builder(this)
+        .addConnectionCallbacks(this)
+        .addOnConnectionFailedListener(this)
+        .addApi(LocationServices.API)
+        .build();
+    }
   }
 }
