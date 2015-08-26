@@ -23,9 +23,9 @@ extends	android.AutoBuild
 				"com.android.support" % "design" % "22.2.1" ::
 				"com.android.support" % "gridlayout-v7" % "22.2.1" ::
 				"com.android.support" % "recyclerview-v7" % "22.2.1" ::
-				"com.android.support" % "support-v4" % "22.2.1" ::
-				// Version 2.4.x requires Java 8
+				"com.android.support" % "support-v4" % "22.2.1" ::                                
 				"com.typesafe.play" %% "play-json" % "2.3.9" ::
+                                "com.google.android.gms" % "play-services-location" % "7.8.0" ::
                                 aar("org.macroid" %% "macroid" % "2.0.0-M4") ::
 			        Nil
 			),

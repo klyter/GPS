@@ -1,23 +1,14 @@
 package com.lyterk
 
-import android.os.Bundle
-import android.widget.{LinearLayout, Button, TextView, ToggleButton}
-import macroid._
-import macroid.FullDsl._
-import macroid.Ui._
-
-
-class MainActivity extends Activity with Contexts[Activity] {
-
-  var greeting = slot[TextView]
-
-<<<<<<< HEAD
 import android.view.View
 import android.app.Activity
+import android.os.Bundle
 import android.util.Log
 
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.GoogleApiClient.{ConnectionCallbacks, OnConnectionFailedListener}
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.location.LocationServices
 
 import com.lyterk.layouts.MainView
 
@@ -29,64 +20,57 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class MainActivity extends Activity
     with Contexts[Activity]
-    with ConnectionCallbacks
-    with OnConnectionFailedListener {
+    with GoogleApiClient.ConnectionCallbacks
+    with GoogleApiClient.OnConnectionFailedListener {
 
-  var mGoogleApiClient: GoogleApiClient
-  
-  override def onCreate(savedInstanceState: Bundle) = {
-    super.onCreate(savedInstanceState)
-    buildGoogleApiClient()
-    setContentView(getUi(MainView.layout))
-  }  
+  var mGoogleApiClient: GoogleApiClient = _
+  // var latitude: String
+  // var longitude: String
+  val TAG: String = "com.lyterk.logging"
 
-  protected override def onStart() = {
-    super.onStart();
-    // Log.v("com.lyterk.logging : Connected?  " + String.valueOf(mGoogleApiClient.isConnected()))
-    mGoogleApiClient.connect()
-  }
-
-  override def onConnected(connectionHint: Bundle) = {
-    mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient)
-    if (mLastLocation != null) {
-      latitude = valueOf(mLastLocation.getLatitude()).toString
-      longitude  = valueOf(mLastLocation.getLongitude()).toString
-
-      val TAG: String = "com.lyterk.logging"
-      Log.d(TAG, latitude)
-      Log.d(TAG, longitude)
-    }
-  }
-
-  protected def buildGoogleApiClient() {    
+  protected def buildGoogleApiClient() {
     this.synchronized {
       mGoogleApiClient = new GoogleApiClient.Builder(this)
         .addConnectionCallbacks(this)
         .addOnConnectionFailedListener(this)
         .addApi(LocationServices.API)
         .build();
-=======
-  override def onCreate(savedInstanceState: Bundle) {
-    super.onCreate(savedInstanceState)    
-
-    setContentView {
-
-      getUi {
-        var greeting = slot[TextView]
-
-        l[LinearLayout] (     
-          w[Button] <~
-            text("Click me") <~
-            On.click {
-              greeting <~ show
-            },
-          w[TextView] <~
-            wire(greeting) <~
-            MyTweaks.greeting("Button successfully clicked.")
-        ) <~ vertical
-
-      }
->>>>>>> 58f8f97fe17e08011d2cd9b9949fdfcdaa83f0ad
+      // Log.v(TAG, "buildGoogleApiClient successful")
     }
+  }
+  
+  override def onCreate(savedInstanceState: Bundle) = {
+    super.onCreate(savedInstanceState)
+    setContentView(getUi(MainView.layout))
+
+    buildGoogleApiClient()
+
+    if (mGoogleApiClient != null) {
+      Log.v(TAG, "mGoogleApiClient is not null")
+      mGoogleApiClient.connect()
+    } else {      
+    }
+  }
+
+  override def onConnected(connectionHint: Bundle) = {
+    Log.v(TAG, "onConnected")
+    var mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient)
+    if (mLastLocation != null) {
+      val latitude = String.valueOf(mLastLocation.getLatitude())
+      val longitude  = String.valueOf(mLastLocation.getLongitude())
+      Log.d(TAG, latitude)
+      Log.d(TAG, longitude)
+    } else {      
+    }
+  }
+
+override def onConnectionFailed(conRes: ConnectionResult) = {
+    // super.onConnectionFailed(conRes)
+    Log.v(TAG, "onConnectionFailed")
+  }
+
+  override def onConnectionSuspended(x: Int): Unit = {
+    // super.onConnectionSuspended(x)
+    Log.v(TAG, "onConnectionSuspended")
   }
 }

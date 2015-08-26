@@ -3,4 +3,4 @@ project/project
 bin/
 local.properties
 project/android-sdk-plugin
-project/google_play_services
+project/google-play-services_lib
